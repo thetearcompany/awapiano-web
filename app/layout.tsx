@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { Inter } from "next/font/google"
 import type { Metadata, Viewport } from "next"
-import { TRPCProvider } from "@/lib/trpc/provider"
+import { APIProvider } from "@/components/api-provider"
 import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -18,7 +18,15 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Amapiano.fm",
   },
-  generator: 'v0.dev'
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+    other: {
+      rel: "icon",
+      url: "/favicon.ico",
+    }
+  }
 }
 
 export const viewport: Viewport = {
@@ -44,14 +52,14 @@ export default function RootLayout({
         <meta name="theme-color" content="#000000" />
       </head>
       <body className={`${inter.className} bg-black text-white`}>
-        <TRPCProvider>
+        <APIProvider>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
             <div className="min-h-screen flex flex-col">
               {children}
               <Toaster />
             </div>
           </ThemeProvider>
-        </TRPCProvider>
+        </APIProvider>
 
         {/* Service Worker Registration */}
         <Script id="register-sw" strategy="afterInteractive">
