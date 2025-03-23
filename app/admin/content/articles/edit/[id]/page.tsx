@@ -29,7 +29,7 @@ import {
   Loader2,
 } from "lucide-react"
 import Link from "next/link"
-import { api } from "@/lib/api"
+import { client } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
 import { useAdminStore } from "@/stores/admin-store"
 
@@ -57,7 +57,7 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
   })
 
   // Fetch article data
-  const { data: article, isLoading: isLoadingArticle } = api.admin.content.getArticleById.useQuery(
+  const { data: article, isLoading: isLoadingArticle } = client.admin.content.getArticleById.useQuery(
     { id: params.id },
     {
       onSuccess: (data) => {
@@ -85,11 +85,11 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
   )
 
   // Fetch categories and tags
-  const { data: categories } = api.admin.content.getCategories.useQuery()
-  const { data: tags } = api.admin.content.getTags.useQuery()
+  const { data: categories } = client.admin.content.getCategories.useQuery()
+  const { data: tags } = client.admin.content.getTags.useQuery()
 
   // Update article mutation
-  const updateArticleMutation = api.admin.content.updateArticle.useMutation({
+  const updateArticleMutation = client.admin.content.updateArticle.useMutation({
     onSuccess: () => {
       toast({
         title: "Article updated",

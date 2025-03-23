@@ -1,25 +1,21 @@
 import { z } from "zod"
 import { router, publicProcedure } from "../index"
-import { UserService } from "@/services/user.service"
-
-const userService = new UserService()
+import { protectedProcedure } from "../procedures/protectedProcedure"
 
 export const userRouter = router({
-  getProfile: publicProcedure
+  getProfile: protectedProcedure
     .input(
       z.object({
         userId: z.string().optional(),
       }),
     )
-    .query(async ({ input, ctx }) => {
-      const userId = input.userId || ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .query(async ({ input, ctx: { userService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return userService.getUserProfile(userId)
     }),
 
-  updateProfile: publicProcedure
+  updateProfile: protectedProcedure
     .input(
       z.object({
         name: z.string().optional(),
@@ -29,15 +25,13 @@ export const userRouter = router({
         avatarUrl: z.string().url().optional(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { userService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return userService.updateUserProfile(userId, input)
     }),
 
-  getFollowers: publicProcedure
+  getFollowers: protectedProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -45,11 +39,13 @@ export const userRouter = router({
         cursor: z.string().optional(),
       }),
     )
-    .query(({ input }) => {
-      return userService.getUserFollowers(input.userId, input.limit, input.cursor)
+    .query(async ({ input, ctx: { userService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
+      return userService.getUserFollowers(userId, input.limit, input.cursor)
     }),
 
-  getFollowing: publicProcedure
+  getFollowing: protectedProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -57,35 +53,33 @@ export const userRouter = router({
         cursor: z.string().optional(),
       }),
     )
-    .query(({ input }) => {
-      return userService.getUserFollowing(input.userId, input.limit, input.cursor)
+    .query(async ({ input, ctx: { userService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
+      return userService.getUserFollowing(userId, input.limit, input.cursor)
     }),
 
-  followUser: publicProcedure
+  followUser: protectedProcedure
     .input(
       z.object({
         targetUserId: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { userService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return userService.followUser(userId, input.targetUserId)
     }),
 
-  unfollowUser: publicProcedure
+  unfollowUser: protectedProcedure
     .input(
       z.object({
         targetUserId: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { userService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return userService.unfollowUser(userId, input.targetUserId)
     }),
 })

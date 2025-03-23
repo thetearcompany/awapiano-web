@@ -33,7 +33,7 @@ import {
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { api } from "@/lib/api"
+import { client } from "@/lib/api"
 import { useAdminStore } from "@/stores/admin-store"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
@@ -58,7 +58,7 @@ export default function UsersPage() {
     data: usersData,
     isLoading,
     refetch,
-  } = api.admin.users.getUsers.useQuery({
+  } = client.admin.users.getUsers.useQuery({
     limit: userFilters.limit,
     search: userFilters.search || undefined,
     role: (userFilters.role as UserRole) || undefined,
@@ -67,10 +67,10 @@ export default function UsersPage() {
   })
 
   // Fetch role counts
-  const { data: roleCountData } = api.admin.users.getUserRolesCount.useQuery()
+  const { data: roleCountData } = client.admin.users.getUserRolesCount.useQuery()
 
   // Delete user mutation
-  const deleteUserMutation = api.admin.users.deleteUser.useMutation({
+  const deleteUserMutation = client.admin.users.deleteUser.useMutation({
     onSuccess: () => {
       toast({
         title: "User deleted",

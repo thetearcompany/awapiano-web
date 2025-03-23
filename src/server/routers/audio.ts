@@ -1,11 +1,9 @@
 import { z } from "zod"
 import { router, publicProcedure } from "../index"
-import { AudioService } from "@/services/audio.service"
-
-const audioService = new AudioService()
+import { protectedProcedure } from "../procedures/protectedProcedure"
 
 export const audioRouter = router({
-  getNowPlaying: publicProcedure.query(() => {
+  getNowPlaying: publicProcedure.query(({ ctx: { audioService } }) => {
     return audioService.getNowPlaying()
   }),
 
@@ -15,7 +13,7 @@ export const audioRouter = router({
         day: z.enum(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]).optional(),
       }),
     )
-    .query(({ input }) => {
+    .query(({ input, ctx: { audioService } }) => {
       return audioService.getRadioSchedule(input.day)
     }),
 
@@ -26,7 +24,7 @@ export const audioRouter = router({
         cursor: z.string().optional(),
       }),
     )
-    .query(({ input }) => {
+    .query(({ input, ctx: { audioService } }) => {
       return audioService.getRecentEpisodes(input.limit, input.cursor)
     }),
 
@@ -37,7 +35,7 @@ export const audioRouter = router({
         cursor: z.string().optional(),
       }),
     )
-    .query(({ input }) => {
+    .query(({ input, ctx: { audioService } }) => {
       return audioService.getPopularTracks(input.limit, input.cursor)
     }),
 
@@ -47,35 +45,31 @@ export const audioRouter = router({
         trackId: z.string(),
       }),
     )
-    .query(({ input }) => {
+    .query(({ input, ctx: { audioService } }) => {
       return audioService.getTrackById(input.trackId)
     }),
 
-  likeTrack: publicProcedure
+  likeTrack: protectedProcedure
     .input(
       z.object({
         trackId: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { audioService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return audioService.likeTrack(userId, input.trackId)
     }),
 
-  unlikeTrack: publicProcedure
+  unlikeTrack: protectedProcedure
     .input(
       z.object({
         trackId: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { audioService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return audioService.unlikeTrack(userId, input.trackId)
     }),
 })

@@ -9,7 +9,8 @@ import { ContentService } from "./services/content.service";
 import { ShopService } from "./services/shop.service";
 import { TalentService } from "./services/talent.service";
 import { UserService } from "./services/user.service";
-
+import { prisma } from "@/lib/prisma"
+import { AudioService } from "./services/audio.service";
 export const createContainer = async (opts?: FetchCreateContextFnOptions) => {
     const requestId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
     const container = Container.of(requestId.toString());
@@ -23,6 +24,7 @@ export const createContainer = async (opts?: FetchCreateContextFnOptions) => {
         sessionService.update = session;
     }
 
+    container.set('AudioService', AudioService);
     container.set('CommunityService', CommunityService);
     container.set('Contentservice', ContentService);
     container.set('RadioService', RadioService);
@@ -31,6 +33,7 @@ export const createContainer = async (opts?: FetchCreateContextFnOptions) => {
     container.set('UserService', UserService);
 
 
+    const audioService = container.get(AudioService);
     const communityService = container.get(CommunityService);
     const contentService = container.get(ContentService);
     const radioService = container.get(RadioService);
@@ -39,6 +42,7 @@ export const createContainer = async (opts?: FetchCreateContextFnOptions) => {
     const userService = container.get(UserService);
 
     const services = {
+        audioService,
         sessionService,
         communityService,
         contentService,
@@ -51,5 +55,6 @@ export const createContainer = async (opts?: FetchCreateContextFnOptions) => {
     return {
         ...context,
         ...services,
+        prisma
     }
 }

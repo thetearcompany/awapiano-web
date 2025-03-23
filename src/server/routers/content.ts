@@ -1,11 +1,8 @@
 import { z } from "zod"
 import { router, publicProcedure } from "../index"
-import { ContentService } from "@/services/content.service"
-
-const contentService = new ContentService()
 
 export const contentRouter = router({
-  getFeaturedArticle: publicProcedure.query(() => {
+  getFeaturedArticle: publicProcedure.query(({ ctx: { contentService } }) => {
     return contentService.getFeaturedArticle()
   }),
 
@@ -17,7 +14,7 @@ export const contentRouter = router({
         categoryId: z.string().optional(),
       }),
     )
-    .query(({ input }) => {
+    .query(({ input, ctx: { contentService } }) => {
       return contentService.getLatestArticles(input.limit, input.cursor, input.categoryId)
     }),
 
@@ -27,15 +24,15 @@ export const contentRouter = router({
         articleId: z.string(),
       }),
     )
-    .query(({ input }) => {
+    .query(({ input, ctx: { contentService } }) => {
       return contentService.getArticleById(input.articleId)
     }),
 
-  getCategories: publicProcedure.query(() => {
+  getCategories: publicProcedure.query(async ({ ctx: { contentService } }) => {
     return contentService.getCategories()
   }),
 
-  getTags: publicProcedure.query(() => {
+  getTags: publicProcedure.query(async ({ ctx: { contentService } }) => {
     return contentService.getTags()
   }),
 
@@ -47,7 +44,7 @@ export const contentRouter = router({
         cursor: z.string().optional(),
       }),
     )
-    .query(({ input }) => {
+    .query(({ input, ctx: { contentService } }) => {
       return contentService.searchArticles(input.query, input.limit, input.cursor)
     }),
 })

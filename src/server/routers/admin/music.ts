@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { router } from "../../../index"
-import { adminProcedure } from "../../middlewares/admin"
+import { router } from "@/server/index"
+import { adminProcedure } from "@/server/procedures/adminProcedure"
 import { TRPCError } from "@trpc/server"
 
 export const adminMusicRouter = router({
@@ -163,10 +163,10 @@ export const adminMusicRouter = router({
           ...data,
           ...(tagIds &&
             tagIds.length > 0 && {
-              tags: {
-                connect: tagIds.map((id) => ({ id })),
-              },
-            }),
+            tags: {
+              connect: tagIds.map((id) => ({ id })),
+            },
+          }),
         },
       })
 
@@ -536,10 +536,10 @@ export const adminMusicRouter = router({
           ...data,
           ...(trackIds &&
             trackIds.length > 0 && {
-              tracks: {
-                connect: trackIds.map((id) => ({ id })),
-              },
-            }),
+            tracks: {
+              connect: trackIds.map((id) => ({ id })),
+            },
+          }),
         },
       })
 
@@ -636,7 +636,7 @@ export const adminMusicRouter = router({
       _count: true,
       orderBy: {
         _count: {
-          _all: "desc",
+          artistId: "desc"
         },
       },
       take: 5,
@@ -663,7 +663,7 @@ export const adminMusicRouter = router({
       _count: true,
       orderBy: {
         _count: {
-          _all: "desc",
+          trackId: "desc"
         },
       },
       take: 5,

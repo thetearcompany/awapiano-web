@@ -1,18 +1,16 @@
 import { TRPCError } from "@trpc/server"
-import { middleware } from "../index"
+import { middleware } from "@/server/index"
 import { UserRole } from "@prisma/client"
+import { publicProcedure } from "@/server/index"
+import { isAuthenticated } from "./protectedProcedure"
 
 export const isAdmin = middleware(async ({ ctx, next }) => {
-  if (!ctx.session?.user) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "You must be logged in to access this resource",
-    })
-  }
+  const current = await ctx.sessionService.current()
+  const userId = current.user.id
 
   // Fetch user with role from database
   const user = await ctx.prisma.user.findUnique({
-    where: { id: ctx.session.user.id },
+    where: { id: userId },
     select: { role: true },
   })
 
@@ -24,15 +22,9 @@ export const isAdmin = middleware(async ({ ctx, next }) => {
   }
 
   return next({
-    ctx: {
-      ...ctx,
-      user: {
-        ...ctx.session.user,
-        role: user.role,
-      },
-    },
+    ctx,
   })
 })
 
-export const adminProcedure = isAdmin
+export const adminProcedure = publicProcedure.use(isAuthenticated).use(isAdmin)
 

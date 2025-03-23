@@ -1,15 +1,13 @@
 import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/server/auth"
-import { prisma } from "@/lib/prisma"
+import { createContainer } from "./container"
 
 export async function createContext(opts?: FetchCreateContextFnOptions) {
   const session = await getServerSession(authOptions)
-
+  const container = createContainer(opts);
   return {
-    session,
-    headers: opts?.req.headers,
-    prisma,
+    ...container,
   }
 }
 

@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { router } from "../../../index"
-import { adminProcedure } from "../../middlewares/admin"
+import { router } from "@/server/index"
+import { adminProcedure } from "@/server/procedures/adminProcedure"
 import { TRPCError } from "@trpc/server"
 
 export const adminRadioRouter = router({

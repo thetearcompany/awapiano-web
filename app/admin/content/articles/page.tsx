@@ -32,7 +32,7 @@ import {
   X,
 } from "lucide-react"
 import Link from "next/link"
-import { trpc } from "@/lib/trpc/client"
+import { client } from "@/lib/api"
 import { useAdminStore } from "@/stores/admin-store"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useRouter } from "next/navigation"
@@ -56,7 +56,7 @@ export default function ArticlesPage() {
     data: articlesData,
     isLoading,
     refetch,
-  } = trpc.admin.content.getArticles.useQuery({
+  } = client.admin.content.getArticles.useQuery({
     limit: articleFilters.limit,
     search: articleFilters.search || undefined,
     categoryId: articleFilters.categoryId || undefined,
@@ -64,10 +64,10 @@ export default function ArticlesPage() {
   })
 
   // Fetch categories for filter
-  const { data: categories } = trpc.admin.content.getCategories.useQuery()
+  const { data: categories } = client.admin.content.getCategories.useQuery()
 
   // Delete article mutation
-  const deleteArticleMutation = trpc.admin.content.deleteArticle.useMutation({
+  const deleteArticleMutation = client.admin.content.deleteArticle.useMutation({
     onSuccess: () => {
       toast({
         title: "Article deleted",

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useCommunityStore } from "@/stores/community-store"
 import { useUserStore } from "@/stores/user-store"
-import { trpc } from "@/lib/trpc/client"
+import { useAPI } from "@/lib/api"
 import { CommunityFeed } from "./components/community-feed"
 import { CreatePostForm } from "./components/create-post-form"
 import { UserProfileCard } from "./components/user-profile-card"
@@ -19,6 +19,7 @@ export function CommunityContainer() {
   const [activeSidebarTab, setActiveSidebarTab] = useState<"profile" | "groups" | "topics">("profile")
   const [isRefreshing, setIsRefreshing] = useState(false)
   const isMobile = useMobileDetect()
+  const api = useAPI()
 
   const {
     posts,
@@ -45,7 +46,7 @@ export function CommunityContainer() {
     fetchNextPage: fetchNextPosts,
     hasNextPage: hasNextPostsPage,
     refetch: refetchPosts,
-  } = trpc.community.getPosts.useInfiniteQuery(
+  } = api.community.getPosts.useInfiniteQuery(
     {
       type: activeTab,
       limit: 10,
@@ -57,19 +58,19 @@ export function CommunityContainer() {
   )
 
   // Fetch popular groups
-  const { data: groupsData, refetch: refetchGroups } = trpc.community.getPopularGroups.useQuery(
+  const { data: groupsData, refetch: refetchGroups } = api.community.getPopularGroups.useQuery(
     { limit: 5 },
     { enabled: true },
   )
 
   // Fetch trending topics
-  const { data: topicsData, refetch: refetchTopics } = trpc.community.getTrendingTopics.useQuery(
+  const { data: topicsData, refetch: refetchTopics } = api.community.getTrendingTopics.useQuery(
     { limit: 5 },
     { enabled: true },
   )
 
   // Create post mutation
-  const createPostMutation = trpc.community.createPost.useMutation({
+  const createPostMutation = api.community.createPost.useMutation({
     onSuccess: (data) => {
       if (data.success && data.post) {
         // Add the new post to the store
@@ -97,7 +98,7 @@ export function CommunityContainer() {
   })
 
   // Like post mutation
-  const likePostMutation = trpc.community.likePost.useMutation({
+  const likePostMutation = api.community.likePost.useMutation({
     onSuccess: (data, variables) => {
       if (data.success) {
         // Update the post in the store
@@ -112,7 +113,7 @@ export function CommunityContainer() {
   })
 
   // Unlike post mutation
-  const unlikePostMutation = trpc.community.unlikePost.useMutation({
+  const unlikePostMutation = api.community.unlikePost.useMutation({
     onSuccess: (data, variables) => {
       if (data.success) {
         // Update the post in the store
@@ -127,7 +128,7 @@ export function CommunityContainer() {
   })
 
   // Create comment mutation
-  const createCommentMutation = trpc.community.createComment.useMutation({
+  const createCommentMutation = api.community.createComment.useMutation({
     onSuccess: (data, variables) => {
       if (data.success && data.comment) {
         // In a real app, we would update the post with the new comment
@@ -145,7 +146,12 @@ export function CommunityContainer() {
   // Update store when data is fetched
   useEffect(() => {
     if (postsData?.pages[0]) {
-      const allPosts = postsData.pages.flatMap((page) => page.posts)
+      const allPosts = postsData.pages.flatMap((page) =>
+        page.posts.map(post => ({
+          ...post,
+          mediaType: post.mediaType as "link" | "image" | "audio" | undefined
+        }))
+      )
       setPosts(allPosts)
     }
   }, [postsData, setPosts])
@@ -281,7 +287,7 @@ export function CommunityContainer() {
 
         {/* Main Content */}
         <div className="md:col-span-2 space-y-6">
-          <CreatePostForm onSubmit={handleCreatePost} isLoading={createPostMutation.isLoading} />
+          <CreatePostForm onSubmit={handleCreatePost} isLoading={createPostMutation.isPending} />
 
           {error && (
             <div className="bg-accent/10 text-accent p-3 rounded-lg text-sm flex items-center justify-between animate-fade-in">

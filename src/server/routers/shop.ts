@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { router, publicProcedure } from "../index"
-import { ShopService } from "@/services/shop.service"
+import { ShopService } from "@/server/services/shop.service"
 
 const shopService = new ShopService()
 
@@ -64,11 +64,9 @@ export const shopRouter = router({
         quantity: z.number().min(1).default(1),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { shopService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return shopService.addToCart(userId, input.productId, input.quantity)
     }),
 
@@ -78,19 +76,15 @@ export const shopRouter = router({
         cartItemId: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { shopService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return shopService.removeFromCart(userId, input.cartItemId)
     }),
 
-  getCart: publicProcedure.query(async ({ ctx }) => {
-    const userId = ctx.session?.user?.id
-    if (!userId) {
-      throw new Error("User not authenticated")
-    }
+  getCart: publicProcedure.query(async ({ ctx: { shopService, sessionService } }) => {
+    const current = await sessionService.current()
+    const userId = current.user.id
     return shopService.getCart(userId)
   }),
 })

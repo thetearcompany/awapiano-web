@@ -50,7 +50,6 @@
     "@trpc/tanstack-react-query": "^11.0.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.8.4",
-    "bcrypt": "^5.1.1",
     "bcryptjs": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -72,6 +71,7 @@
     "react-hook-form": "^7.54.1",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
+    "reflect-metadata": "^0.2.2",
     "sonner": "^1.7.1",
     "superjson": "latest",
     "tailwind-merge": "^2.5.5",
@@ -83,7 +83,6 @@
     "zustand": "latest"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -96,6 +95,7 @@
     "onlyBuiltDependencies": [
       "@prisma/client",
       "@prisma/engines",
+      "bcrypt",
       "esbuild",
       "prisma",
       "sharp"

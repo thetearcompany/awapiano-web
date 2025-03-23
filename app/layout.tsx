@@ -1,10 +1,11 @@
+import 'reflect-metadata'
 import type React from "react"
 import "@/app/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { Inter } from "next/font/google"
 import type { Metadata, Viewport } from "next"
-import { APIProvider } from "@/components/api-provider"
+import { APIReactProvider } from "@/components/api-provider"
 import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -52,14 +53,14 @@ export default function RootLayout({
         <meta name="theme-color" content="#000000" />
       </head>
       <body className={`${inter.className} bg-black text-white`}>
-        <APIProvider>
+        <APIReactProvider>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
             <div className="min-h-screen flex flex-col">
               {children}
               <Toaster />
             </div>
           </ThemeProvider>
-        </APIProvider>
+        </APIReactProvider>
 
         {/* Service Worker Registration */}
         <Script id="register-sw" strategy="afterInteractive">

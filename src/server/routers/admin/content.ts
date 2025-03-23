@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { router } from "../../../index"
-import { adminProcedure } from "../../middlewares/admin"
+import { router } from "@/server/index"
+import { adminProcedure } from "@/server/procedures/adminProcedure"
 import { TRPCError } from "@trpc/server"
 
 export const adminContentRouter = router({
@@ -134,6 +134,9 @@ export const adminContentRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const current = await ctx.sessionService.current()
+      const userId = current.user.id
+
       // Check if slug is already taken
       const existingArticle = await ctx.prisma.article.findUnique({
         where: { slug: input.slug },
@@ -156,7 +159,7 @@ export const adminContentRouter = router({
           published: input.published,
           publishedAt: input.published ? input.publishedAt || new Date() : null,
           author: {
-            connect: { id: ctx.session.user.id },
+            connect: { id: userId },
           },
           ...(input.categoryId && {
             category: {
@@ -165,10 +168,10 @@ export const adminContentRouter = router({
           }),
           ...(input.tagIds &&
             input.tagIds.length > 0 && {
-              tags: {
-                connect: input.tagIds.map((id) => ({ id })),
-              },
-            }),
+            tags: {
+              connect: input.tagIds.map((id) => ({ id })),
+            },
+          }),
         },
       })
 
@@ -234,7 +237,12 @@ export const adminContentRouter = router({
       const article = await ctx.prisma.article.update({
         where: { id },
         data: {
-          ...data,
+          title: data.title,
+          slug: data.slug,
+          excerpt: data.excerpt,
+          content: data.content,
+          coverImage: data.coverImage,
+          published: data.published,
           publishedAt,
           ...(data.categoryId && {
             category: {

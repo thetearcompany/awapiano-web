@@ -1,6 +1,6 @@
 'use client';
-import { createTRPCReact } from '@trpc/react-query';
 
+import { createTRPCReact } from '@trpc/react-query';
 import { loggerLink } from '@trpc/client';
 import {
     experimental_createTRPCNextAppDirClient,
@@ -10,7 +10,10 @@ import type { AppRouter } from '@/server/routers/_app';
 import { getUrl, transformer } from '@/utils/shared';
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 
-export const api = experimental_createTRPCNextAppDirClient<AppRouter>({
+export const { createClient, Provider: APIProvider } = createTRPCReact<AppRouter>();
+
+export const client = createTRPCReact<AppRouter>();
+export const server = experimental_createTRPCNextAppDirClient<AppRouter>({
     config() {
         return {
             links: [
@@ -32,8 +35,5 @@ export const api = experimental_createTRPCNextAppDirClient<AppRouter>({
     },
 });
 
-export const { createClient, Provider: APIProvider } = createTRPCReact<AppRouter>();
-
-// Types for inputs/outputs of router
 export type RouterInputs = inferRouterInputs<AppRouter>
 export type RouterOutputs = inferRouterOutputs<AppRouter>

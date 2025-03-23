@@ -1,4 +1,4 @@
-import { router } from "../../../index"
+import { router } from "@/server/index"
 import { adminUsersRouter } from "./users"
 import { adminContentRouter } from "./content"
 import { adminMusicRouter } from "./music"

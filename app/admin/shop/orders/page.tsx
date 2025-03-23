@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Search, X, ShoppingCart, CreditCard, CheckCircle, AlertCircle } from "lucide-react"
 import { Select, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { api } from "@/lib/api"
+import { client } from "@/lib/api"
 import { useAdminStore } from "@/stores/admin-store"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
@@ -47,7 +47,7 @@ export default function OrdersPage() {
     data: ordersData,
     isLoading,
     refetch
-  } = api.admin.shop.getOrders.useQuery({
+  } = client.admin.shop.getOrders.useQuery({
     limit: filters.limit,
     search: filters.search || undefined,
     status: filters.status as OrderStatus || undefined,
@@ -56,10 +56,10 @@ export default function OrdersPage() {
   })
 
   // Fetch shop stats
-  const { data: shopStats } = api.admin.shop.getShopStats.useQuery()
+  const { data: shopStats } = client.admin.shop.getShopStats.useQuery()
 
   // Update order status mutation
-  const updateOrderStatusMutation = api.admin.shop.updateOrderStatus.useMutation({
+  const updateOrderStatusMutation = client.admin.shop.updateOrderStatus.useMutation({
     onSuccess: () => {
       toast({
         title: "Order updated",

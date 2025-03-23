@@ -8,7 +8,7 @@ import { PieChart, Activity, TrendingUp, Users, ShoppingCart, Radio, FileText, R
 import { AdminPageHeader } from "@/components/admin/admin-page-header"
 import { AdminMetricCard } from "@/components/admin/admin-metric-card"
 import { AdminRecentActivity } from "@/components/admin/admin-recent-activity"
-import { trpc } from "@/lib/trpc/client"
+import { client } from "@/lib/api"
 import { useAdminStore } from "@/stores/admin-store"
 import { formatNumber } from "@/lib/utils"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
@@ -34,10 +34,10 @@ export default function AdminDashboard() {
   }, [setCurrentSection])
 
   // Fetch dashboard data
-  const { data: dashboardData, isLoading, refetch } = trpc.admin.dashboard.getMetrics.useQuery()
-  const { data: userGrowthData } = trpc.admin.dashboard.getUserGrowthData.useQuery()
-  const { data: contentData } = trpc.admin.dashboard.getContentData.useQuery()
-  const { data: revenueData } = trpc.admin.dashboard.getRevenueData.useQuery()
+  const { data: dashboardData, isLoading, refetch } = client.admin.dashboard.getMetrics.useQuery()
+  const { data: userGrowthData } = client.admin.dashboard.getUserGrowthData.useQuery()
+  const { data: contentData } = client.admin.dashboard.getContentData.useQuery()
+  const { data: revenueData } = client.admin.dashboard.getRevenueData.useQuery()
 
   // Handle refresh
   const handleRefresh = async () => {

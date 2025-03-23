@@ -1,11 +1,9 @@
 import { z } from "zod"
 import { router, publicProcedure } from "../index"
-import { CommunityService } from "@/services/community.service"
-
-const communityService = new CommunityService()
+import { protectedProcedure } from "../procedures/protectedProcedure"
 
 export const communityRouter = router({
-  getPosts: publicProcedure
+  getPosts: protectedProcedure
     .input(
       z.object({
         type: z.enum(["trending", "latest", "following"]).default("trending"),
@@ -13,8 +11,9 @@ export const communityRouter = router({
         cursor: z.string().optional(),
       }),
     )
-    .query(({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
+    .query(async ({ input, ctx: { communityService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return communityService.getPosts(input.type, input.limit, input.cursor, userId)
     }),
 
@@ -24,7 +23,7 @@ export const communityRouter = router({
         postId: z.string(),
       }),
     )
-    .query(({ input }) => {
+    .query(async ({ input, ctx: { communityService } }) => {
       return communityService.getPostById(input.postId)
     }),
 
@@ -36,11 +35,9 @@ export const communityRouter = router({
         mediaType: z.enum(["image", "audio", "link"]).optional(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { communityService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return communityService.createPost(userId, input)
     }),
 
@@ -50,11 +47,9 @@ export const communityRouter = router({
         postId: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { communityService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return communityService.likePost(userId, input.postId)
     }),
 
@@ -64,11 +59,9 @@ export const communityRouter = router({
         postId: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { communityService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return communityService.unlikePost(userId, input.postId)
     }),
 
@@ -80,11 +73,9 @@ export const communityRouter = router({
         parentCommentId: z.string().optional(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { communityService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return communityService.createComment(userId, input)
     }),
 
@@ -94,7 +85,7 @@ export const communityRouter = router({
         limit: z.number().min(1).max(10).default(5),
       }),
     )
-    .query(({ input }) => {
+    .query(async ({ input, ctx: { communityService } }) => {
       return communityService.getPopularGroups(input.limit)
     }),
 
@@ -104,7 +95,7 @@ export const communityRouter = router({
         limit: z.number().min(1).max(10).default(5),
       }),
     )
-    .query(({ input }) => {
+    .query(async ({ input, ctx: { communityService } }) => {
       return communityService.getTrendingTopics(input.limit)
     }),
 })

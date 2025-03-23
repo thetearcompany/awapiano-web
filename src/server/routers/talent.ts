@@ -1,11 +1,8 @@
 import { z } from "zod"
 import { router, publicProcedure } from "../index"
-import { TalentService } from "@/services/talent.service"
-
-const talentService = new TalentService()
 
 export const talentRouter = router({
-  getSpotlightArtist: publicProcedure.query(() => {
+  getSpotlightArtist: publicProcedure.query(async ({ ctx: { talentService } }) => {
     return talentService.getSpotlightArtist()
   }),
 
@@ -18,7 +15,7 @@ export const talentRouter = router({
         sortBy: z.enum(["recent", "popular", "rating"]).default("recent"),
       }),
     )
-    .query(({ input }) => {
+    .query(({ input, ctx: { talentService } }) => {
       return talentService.getSubmissions(input)
     }),
 
@@ -29,7 +26,7 @@ export const talentRouter = router({
         limit: z.number().min(1).max(10).default(3),
       }),
     )
-    .query(({ input }) => {
+    .query(({ input, ctx: { talentService } }) => {
       return talentService.getTopRated(input.period, input.limit)
     }),
 
@@ -39,7 +36,7 @@ export const talentRouter = router({
         submissionId: z.string(),
       }),
     )
-    .query(({ input }) => {
+    .query(({ input, ctx: { talentService } }) => {
       return talentService.getSubmissionById(input.submissionId)
     }),
 
@@ -59,11 +56,9 @@ export const talentRouter = router({
           .optional(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { talentService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return talentService.submitFeedback(userId, input)
     }),
 
@@ -79,11 +74,9 @@ export const talentRouter = router({
         duration: z.number().min(1),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session?.user?.id
-      if (!userId) {
-        throw new Error("User not authenticated")
-      }
+    .mutation(async ({ input, ctx: { talentService, sessionService } }) => {
+      const current = await sessionService.current()
+      const userId = current.user.id
       return talentService.createSubmission(userId, input)
     }),
 })

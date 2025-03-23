@@ -1,5 +1,5 @@
-import { router } from "../../../index"
-import { adminProcedure } from "../../middlewares/admin"
+import { router } from "@/server/index"
+import { adminProcedure } from "@/server/procedures/adminProcedure"
 
 export const adminDashboardRouter = router({
   // Get dashboard metrics
@@ -9,14 +9,15 @@ export const adminDashboardRouter = router({
 
     // Get active listeners (users who have played a track in the last 24 hours)
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
-    const activeListeners = await ctx.prisma.playback.count({
+    const activeListeners = await ctx.prisma.playback.groupBy({
+      by: ["userId", "ipAddress"],
       where: {
         createdAt: {
           gte: oneDayAgo,
         },
       },
-      distinct: ["userId", "ipAddress"],
-    })
+      _count: true,
+    }).then(result => result.length)
 
     // Get total revenue
     const totalRevenue = await ctx.prisma.order.aggregate({
