@@ -36,7 +36,7 @@ import {
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { trpc } from "@/lib/trpc/client"
+import { api } from "@/lib/api"
 import { useAdminStore } from "@/stores/admin-store"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
@@ -72,7 +72,7 @@ export default function TracksPage() {
     data: tracksData,
     isLoading,
     refetch,
-  } = trpc.admin.music.getTracks.useQuery({
+  } = api.admin.music.getTracks.useQuery({
     limit: filters.limit,
     search: filters.search || undefined,
     artistId: filters.artistId || undefined,
@@ -83,10 +83,10 @@ export default function TracksPage() {
   })
 
   // Fetch track stats
-  const { data: trackStats } = trpc.admin.music.getTrackStats.useQuery()
+  const { data: trackStats } = api.admin.music.getTrackStats.useQuery()
 
   // Delete track mutation
-  const deleteTrackMutation = trpc.admin.music.deleteTrack.useMutation({
+  const deleteTrackMutation = api.admin.music.deleteTrack.useMutation({
     onSuccess: () => {
       toast({
         title: "Track deleted",
@@ -95,7 +95,7 @@ export default function TracksPage() {
       })
       refetch()
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast({
         title: "Error",
         description: error.message || "Failed to delete track. Please try again.",
