@@ -22,11 +22,11 @@ export default function Home() {
           {/* Animated Background */}
           <div className="absolute inset-0 bg-black">
             <div className="absolute inset-0 opacity-30">
-              <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute bottom-0 -right-1/4 w-1/2 h-1/2 bg-blue-500/30 rounded-full blur-3xl animate-pulse delay-700"></div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-indigo-500/30 rounded-full blur-3xl animate-pulse delay-500"></div>
+              <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-[#DE3831]/30 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-0 -right-1/4 w-1/2 h-1/2 bg-[#002395]/30 rounded-full blur-3xl animate-pulse delay-700"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-[#007A4D]/30 rounded-full blur-3xl animate-pulse delay-500"></div>
             </div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.9)_100%)]"></div>
           </div>
 
           {/* Floating Elements */}
@@ -34,7 +34,7 @@ export default function Home() {
             {[...Array(20)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-1 h-1 bg-white rounded-full"
+                className="absolute w-1 h-1 bg-[#FFB612] rounded-full"
                 initial={{
                   x: Math.random() * 100 + "%",
                   y: Math.random() * 100 + "%",
@@ -100,8 +100,8 @@ export default function Home() {
         <section className="py-16 bg-black relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black"></div>
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-0 w-1/3 h-1/3 bg-blue-500/10 rounded-full blur-3xl"></div>
+            <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-[#DE3831]/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-0 w-1/3 h-1/3 bg-[#002395]/10 rounded-full blur-3xl"></div>
           </div>
 
           <div className="container max-w-4xl mx-auto px-4 relative z-10">
@@ -127,11 +127,11 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                 >
-                  <Card className="glass-card overflow-hidden group hover:border-secondary/50 transition-all duration-300 transform hover:scale-[1.02]">
-                    <div className="relative aspect-square bg-gradient-to-br from-purple-500/20 via-indigo-500/20 to-blue-500/20">
+                  <Card className="glass-card overflow-hidden group hover:border-[#FFB612]/50 transition-all duration-300 transform hover:scale-[1.02]">
+                    <div className="relative aspect-square bg-gradient-to-br from-[#DE3831]/20 via-[#002395]/20 to-[#007A4D]/20">
                       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300"></div>
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Button className="rounded-full h-14 w-14 bg-secondary/90 text-black hover:bg-secondary backdrop-blur-sm transform hover:scale-110 transition-all duration-300">
+                        <Button className="rounded-full h-14 w-14 bg-[#FFB612]/90 text-black hover:bg-[#FFB612] backdrop-blur-sm transform hover:scale-110 transition-all duration-300">
                           <Play className="h-6 w-6 ml-0.5" />
                         </Button>
                       </div>
@@ -140,7 +140,7 @@ export default function Home() {
                       <h3 className="font-bold truncate">Amapiano Fusion Vol. {item}</h3>
                       <p className="text-sm text-muted-foreground">DJ Stokie</p>
                       <div className="flex items-center justify-between mt-2">
-                        <Badge variant="outline" className="bg-white/5 hover:bg-white/10 transition-colors">
+                        <Badge variant="outline" className="bg-white/5 hover:bg-white/10 transition-colors border-[#FFB612]/50">
                           New Release
                         </Badge>
                         <span className="text-xs text-muted-foreground">03:24</span>
@@ -156,8 +156,8 @@ export default function Home() {
         {/* Featured Artists */}
         <section className="py-16 bg-gradient-to-b from-black to-black/95 relative overflow-hidden">
           <div className="absolute inset-0">
-            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-indigo-500/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl"></div>
+            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-[#002395]/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-[#DE3831]/10 rounded-full blur-3xl"></div>
           </div>
 
           <div className="container max-w-4xl mx-auto px-4 relative z-10">
@@ -184,11 +184,11 @@ export default function Home() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
                   <Link href="#" className="flex flex-col items-center text-center group">
-                    <div className="relative h-24 w-24 rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-secondary transition-all duration-300">
-                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-indigo-500/20 to-blue-500/20 group-hover:scale-110 transition-transform duration-300"></div>
+                    <div className="relative h-24 w-24 rounded-full overflow-hidden mb-3 border-2 border-transparent group-hover:border-[#FFB612] transition-all duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#DE3831]/20 via-[#002395]/20 to-[#007A4D]/20 group-hover:scale-110 transition-transform duration-300"></div>
                       <div className="absolute inset-0 backdrop-blur-sm group-hover:backdrop-blur-none transition-all duration-300"></div>
                     </div>
-                    <h3 className="font-medium text-sm group-hover:text-secondary transition-colors">DJ Maphorisa</h3>
+                    <h3 className="font-medium text-sm group-hover:text-[#FFB612] transition-colors">DJ Maphorisa</h3>
                     <p className="text-xs text-muted-foreground group-hover:text-white/80 transition-colors">Producer</p>
                   </Link>
                 </motion.div>
@@ -303,8 +303,8 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32 animate-pulse"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/20 rounded-full blur-3xl -ml-32 -mb-32 animate-pulse delay-500"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#DE3831]/20 rounded-full blur-3xl -mr-32 -mt-32 animate-pulse"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#002395]/20 rounded-full blur-3xl -ml-32 -mb-32 animate-pulse delay-500"></div>
               <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-transparent to-transparent"></div>
 
               <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
@@ -315,7 +315,7 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                  <Badge className="bg-accent/90 text-white mb-4 backdrop-blur-sm">Join the Movement</Badge>
+                  <Badge className="bg-[#FFB612]/90 text-black mb-4 backdrop-blur-sm">Join the Movement</Badge>
                   <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/80">
                     Become Part of the Amapiano Community
                   </h2>
@@ -323,10 +323,10 @@ export default function Home() {
                     Share your mixes, connect with other artists, and get exclusive access to events and releases.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <Button className="bg-secondary/90 hover:bg-secondary text-black backdrop-blur-sm transition-all duration-300 hover:scale-105 glow-hover">
+                    <Button className="bg-[#007A4D]/90 hover:bg-[#007A4D] text-white backdrop-blur-sm transition-all duration-300 hover:scale-105">
                       Sign Up Free
                     </Button>
-                    <Button variant="outline" className="border-white/20 hover:bg-white/10 backdrop-blur-sm transition-all duration-300 hover:scale-105">
+                    <Button variant="outline" className="border-[#FFB612]/20 hover:bg-[#FFB612]/10 backdrop-blur-sm transition-all duration-300 hover:scale-105">
                       Learn More
                     </Button>
                   </div>
@@ -338,10 +338,10 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary via-secondary to-accent animate-spin-slow"></div>
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#DE3831] via-[#002395] to-[#007A4D] animate-spin-slow"></div>
                   <div className="absolute inset-2 rounded-full bg-black"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Sparkles className="h-16 w-16 text-white animate-pulse" />
+                    <Sparkles className="h-16 w-16 text-[#FFB612] animate-pulse" />
                   </div>
                 </motion.div>
               </div>

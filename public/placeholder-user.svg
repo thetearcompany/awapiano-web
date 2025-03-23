@@ -16,7 +16,7 @@
     
     <!-- Filtr dla efektu glassmorphism -->
     <filter id="blur">
-      <feGaussianBlur stdDeviation="15"/>
+      <feGaussianBlur stdDeviation="10"/>
     </filter>
     
     <!-- Filtr dla tekstury szkła -->
@@ -37,27 +37,19 @@
   
   <!-- Efekty glassmorphism -->
   <g filter="url(#blur)">
-    <circle cx="200" cy="200" r="120" fill="#DE3831" opacity="0.15"/>
-    <circle cx="200" cy="200" r="100" fill="#002395" opacity="0.15"/>
-    <circle cx="200" cy="200" r="80" fill="#007A4D" opacity="0.15"/>
+    <circle cx="200" cy="180" r="100" fill="#DE3831" opacity="0.15"/>
+    <circle cx="200" cy="180" r="80" fill="#002395" opacity="0.15"/>
+    <circle cx="200" cy="180" r="60" fill="#007A4D" opacity="0.15"/>
   </g>
   
   <!-- Tekstura szkła -->
   <rect width="100%" height="100%" filter="url(#noise)"/>
   
-  <!-- Logo placeholder -->
-  <g transform="translate(100,100) scale(0.5)">
-    <path d="M200,100 A100,100 0 0,1 300,200 A100,100 0 0,1 200,300 A100,100 0 0,1 100,200 A100,100 0 0,1 200,100 Z" 
-          fill="none" 
-          stroke="url(#accentGradient)" 
-          stroke-width="4"/>
-    <text x="200" y="220" 
-          font-family="Arial" 
-          font-size="48" 
-          fill="#FFB612" 
-          text-anchor="middle" 
-          opacity="0.6">
-      LOGO
-    </text>
+  <!-- User icon -->
+  <g transform="translate(200,180)" fill="none" stroke="#FFB612" stroke-width="2" opacity="0.6">
+    <!-- Head -->
+    <circle cx="0" cy="-40" r="40"/>
+    <!-- Body -->
+    <path d="M-60,40 C-60,0 -30,-20 0,-20 C30,-20 60,0 60,40 L60,100 L-60,100 Z"/>
   </g>
-</svg>
+</svg> 
