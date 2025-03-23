@@ -28,7 +28,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useMobileDetect } from "@/hooks/use-mobile"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface AudioPlayerViewProps {
   currentTrack: Track | null
@@ -70,7 +70,7 @@ export function AudioPlayerView({
   const [isLiked, setIsLiked] = useState(false)
   const [showVolumeControl, setShowVolumeControl] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const isMobile = useMobileDetect()
+  const isMobile = useIsMobile()
 
   // Audio visualization levels (for the waveform effect)
   const audioLevels = [0.3, 0.5, 0.7, 0.8, 1, 0.8, 0.7, 0.5, 0.3]

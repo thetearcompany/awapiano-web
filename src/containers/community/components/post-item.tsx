@@ -15,7 +15,6 @@ import {
 import { BookmarkPlus, Heart, MessageCircle, MoreHorizontal, Send, Share2, ThumbsUp } from "lucide-react"
 import type { Post } from "@/stores/community-store"
 import Image from "next/image"
-import { useMobileDetect } from "@/hooks/use-mobile"
 
 interface PostItemProps {
   post: Post
@@ -30,7 +29,6 @@ export function PostItem({ post, onLike, onUnlike, onComment }: PostItemProps) {
   const [commentText, setCommentText] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const commentInputRef = useRef<HTMLInputElement>(null)
-  const isMobile = useMobileDetect()
 
   const handleLikeToggle = () => {
     if (isLiked) {

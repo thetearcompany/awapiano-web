@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react"
 import { useCommunityStore } from "@/stores/community-store"
 import { useUserStore } from "@/stores/user-store"
-import { useAPI } from "@/lib/api"
+import { client } from "@/lib/api"
 import { CommunityFeed } from "./components/community-feed"
 import { CreatePostForm } from "./components/create-post-form"
 import { UserProfileCard } from "./components/user-profile-card"
 import { PopularGroupsList } from "./components/popular-groups-list"
 import { TrendingTopicsList } from "./components/trending-topics-list"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useMobileDetect } from "@/hooks/use-mobile"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
 
@@ -18,8 +18,7 @@ export function CommunityContainer() {
   const [activeTab, setActiveTab] = useState<"trending" | "latest" | "following">("trending")
   const [activeSidebarTab, setActiveSidebarTab] = useState<"profile" | "groups" | "topics">("profile")
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const isMobile = useMobileDetect()
-  const api = useAPI()
+  const isMobile = useIsMobile()
 
   const {
     posts,
@@ -46,7 +45,7 @@ export function CommunityContainer() {
     fetchNextPage: fetchNextPosts,
     hasNextPage: hasNextPostsPage,
     refetch: refetchPosts,
-  } = api.community.getPosts.useInfiniteQuery(
+  } = client.community.getPosts.useInfiniteQuery(
     {
       type: activeTab,
       limit: 10,
@@ -58,19 +57,19 @@ export function CommunityContainer() {
   )
 
   // Fetch popular groups
-  const { data: groupsData, refetch: refetchGroups } = api.community.getPopularGroups.useQuery(
+  const { data: groupsData, refetch: refetchGroups } = client.community.getPopularGroups.useQuery(
     { limit: 5 },
     { enabled: true },
   )
 
   // Fetch trending topics
-  const { data: topicsData, refetch: refetchTopics } = api.community.getTrendingTopics.useQuery(
+  const { data: topicsData, refetch: refetchTopics } = client.community.getTrendingTopics.useQuery(
     { limit: 5 },
     { enabled: true },
   )
 
   // Create post mutation
-  const createPostMutation = api.community.createPost.useMutation({
+  const createPostMutation = client.community.createPost.useMutation({
     onSuccess: (data) => {
       if (data.success && data.post) {
         // Add the new post to the store
@@ -98,7 +97,7 @@ export function CommunityContainer() {
   })
 
   // Like post mutation
-  const likePostMutation = api.community.likePost.useMutation({
+  const likePostMutation = client.community.likePost.useMutation({
     onSuccess: (data, variables) => {
       if (data.success) {
         // Update the post in the store
@@ -113,7 +112,7 @@ export function CommunityContainer() {
   })
 
   // Unlike post mutation
-  const unlikePostMutation = api.community.unlikePost.useMutation({
+  const unlikePostMutation = client.community.unlikePost.useMutation({
     onSuccess: (data, variables) => {
       if (data.success) {
         // Update the post in the store
@@ -128,7 +127,7 @@ export function CommunityContainer() {
   })
 
   // Create comment mutation
-  const createCommentMutation = api.community.createComment.useMutation({
+  const createCommentMutation = client.community.createComment.useMutation({
     onSuccess: (data, variables) => {
       if (data.success && data.comment) {
         // In a real app, we would update the post with the new comment
