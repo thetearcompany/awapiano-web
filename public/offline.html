@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amapiano.fm - Offline</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    
+    .container {
+      max-width: 600px;
+      padding: 2rem;
+      background-color: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 1rem;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to bottom, #007847, #FFB612, #DE3831, #002395);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 2rem;
+      color: #000;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: #007847;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+    
+    .button:hover {
+      background-color: #00663d;
+    }
+    
+    .cached-content {
+      margin-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 1.5rem;
+    }
+    
+    .cached-item {
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      text-align: left;
+    }
+    
+    .cached-item h3 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
+    }
+    
+    .cached-item p {
+      margin: 0;
+      font-size: 0.875rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">A</div>
+    <h1>You're currently offline</h1>
+    <p>It looks like you've lost your internet connection. Don't worry, you can still access some content that was previously cached.</p>
+    <a href="/" class="button">Try Again</a>
+    
+    <div class="cached-content">
+      <h2>Available Offline</h2>
+      <div id="cached-items">
+        <!-- Cached items will be populated here by JavaScript -->
+        <div class="cached-item">
+          <h3>Home Page</h3>
+          <p>The main Amapiano.fm experience</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check if we're back online
+    window.addEventListener('online', () => {
+      window.location.reload();
+    });
+    
+    // Populate cached items if available
+    async function showCachedPages() {
+      try {
+        const cache = await caches.open('amapiano-fm-cache-v1');
+        const cachedRequests = await cache.keys();
+        const cachedPages = cachedRequests.filter(request => 
+          request.url.endsWith('/') || 
+          request.url.includes('.html') || 
+          request.url.includes('/community') ||
+          request.url.includes('/radio')
+        );
+        
+        const cachedItemsContainer = document.getElementById('cached-items');
+        
+        if (cachedPages.length > 0) {
+          cachedItemsContainer.innerHTML = '';
+          
+          cachedPages.forEach(request => {
+            const url = new URL(request.url);
+            let title = 'Home Page';
+            let description = 'The main Amapiano.fm experience';
+            
+            if (url.pathname.includes('/community')) {
+              title = 'Community';
+              description = 'Connect with other Amapiano enthusiasts';
+            } else if (url.pathname.includes('/radio')) {
+              title = 'Radio';
+              description = 'Listen to Amapiano radio stations';
+            } else if (url.pathname.includes('/shop')) {
+              title = 'Shop';
+              description = 'Browse Amapiano merchandise and music';
+            } else if (url.pathname.includes('/blog')) {
+              title = 'Blog';
+              description = 'Read the latest Amapiano news and articles';
+            } else if (url.pathname.includes('/talent')) {
+              title = 'Talent';
+              description = 'Discover new Amapiano artists and DJs';
+            }
+            
+            const itemElement = document.createElement('div');
+            itemElement.className = 'cached-item';
+            itemElement.innerHTML = `
+              <h3>${title}</h3>
+              <p>${description}</p>
+            `;
+            
+            itemElement.addEventListener('click', () => {
+              window.location.href = url.pathname;
+            });
+            
+            cachedItemsContainer.appendChild(itemElement);
+          });
+        }
+      } catch (error) {
+        console.error('Error showing cached pages:', error);
+      }
+    }
+    
+    // Run on page load
+    showCachedPages();
+  </script>
+</body>
+</html>
+
