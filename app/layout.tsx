@@ -3,7 +3,7 @@ import "@/app/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { Inter } from "next/font/google"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { TRPCProvider } from "@/lib/trpc/provider"
 import Script from "next/script"
 
@@ -13,14 +13,19 @@ export const metadata: Metadata = {
   title: "Amapiano.fm",
   description: "South Africa's premier Amapiano music platform",
   manifest: "/manifest.json",
-  themeColor: "#000000",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Amapiano.fm",
   },
-    generator: 'v0.dev'
+  generator: 'v0.dev'
+}
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default function RootLayout({

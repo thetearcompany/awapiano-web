@@ -3,6 +3,19 @@ import { Footer } from "@/components/footer"
 import { AudioPlayerContainer } from "@/containers/audio-player"
 import { CommunityContainer } from "@/containers/community"
 import { Suspense } from "react"
+import type { Metadata, Viewport } from "next"
+
+export const metadata: Metadata = {
+  title: "Community | Amapiano.fm",
+  description: "Connect with fellow Amapiano enthusiasts, share your thoughts, and stay updated with the latest discussions.",
+}
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+}
 
 export default function CommunityPage() {
   return (
