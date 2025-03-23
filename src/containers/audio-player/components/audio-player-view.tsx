@@ -39,14 +39,14 @@ interface AudioPlayerViewProps {
   isMuted: boolean
   isMinimized: boolean
   showPlaylist: boolean
-  onTogglePlay: () => void
-  onSeek: (time: number) => void
-  onVolumeChange: (volume: number) => void
-  onToggleMute: () => void
-  onToggleMinimize: () => void
-  onTogglePlaylist: () => void
-  onNext: () => void
-  onPrevious: () => void
+  onTogglePlayAction: () => void
+  onSeekAction: (time: number) => void
+  onVolumeChangeAction: (volume: number) => void
+  onToggleMuteAction: () => void
+  onToggleMinimizeAction: () => void
+  onTogglePlaylistAction: () => void
+  onNextAction: () => void
+  onPreviousAction: () => void
 }
 
 export function AudioPlayerView({
@@ -58,14 +58,14 @@ export function AudioPlayerView({
   isMuted,
   isMinimized,
   showPlaylist,
-  onTogglePlay,
-  onSeek,
-  onVolumeChange,
-  onToggleMute,
-  onToggleMinimize,
-  onTogglePlaylist,
-  onNext,
-  onPrevious,
+  onTogglePlayAction,
+  onSeekAction,
+  onVolumeChangeAction,
+  onToggleMuteAction,
+  onToggleMinimizeAction,
+  onTogglePlaylistAction,
+  onNextAction,
+  onPreviousAction,
 }: AudioPlayerViewProps) {
   const [isLiked, setIsLiked] = useState(false)
   const [showVolumeControl, setShowVolumeControl] = useState(false)
@@ -168,7 +168,7 @@ export function AudioPlayerView({
               max={duration}
               step={1}
               className="w-full"
-              onValueChange={(value) => onSeek(value[0])}
+              onValueChange={(value) => onSeekAction(value[0])}
             />
           </div>
 
@@ -177,7 +177,7 @@ export function AudioPlayerView({
               variant="ghost"
               size="icon"
               className="rounded-full h-12 w-12 hover:bg-white/5"
-              onClick={onPrevious}
+              onClick={onPreviousAction}
             >
               <SkipBack className="h-6 w-6" />
             </Button>
@@ -185,11 +185,11 @@ export function AudioPlayerView({
               variant="ghost"
               size="icon"
               className="rounded-full h-16 w-16 bg-secondary text-black hover:bg-secondary/90"
-              onClick={onTogglePlay}
+              onClick={onTogglePlayAction}
             >
               {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8 ml-1" />}
             </Button>
-            <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-white/5" onClick={onNext}>
+            <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-white/5" onClick={onNextAction}>
               <SkipForward className="h-6 w-6" />
             </Button>
           </div>
@@ -215,7 +215,7 @@ export function AudioPlayerView({
               variant="ghost"
               size="icon"
               className="rounded-full h-10 w-10 hover:bg-white/5"
-              onClick={onTogglePlaylist}
+              onClick={onTogglePlaylistAction}
             >
               <ListMusic className="h-5 w-5" />
             </Button>
@@ -231,7 +231,7 @@ export function AudioPlayerView({
                 max={100}
                 step={1}
                 className="w-full"
-                onValueChange={(value) => onVolumeChange(value[0])}
+                onValueChange={(value) => onVolumeChangeAction(value[0])}
               />
             </div>
           )}
@@ -291,7 +291,7 @@ export function AudioPlayerView({
                     "rounded-full transition-colors h-8 w-8 sm:h-10 sm:w-10",
                     showPlaylist ? "text-secondary" : "hover:bg-white/5",
                   )}
-                  onClick={onTogglePlaylist}
+                  onClick={onTogglePlaylistAction}
                 >
                   <ListMusic className="h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
@@ -318,7 +318,7 @@ export function AudioPlayerView({
               variant="ghost"
               size="icon"
               className="rounded-full hover:bg-white/5 transition-colors h-8 w-8 touch-target"
-              onClick={onTogglePlay}
+              onClick={onTogglePlayAction}
             >
               {isPlaying ? <Pause className="h-4 w-4 sm:h-5 sm:w-5" /> : <Play className="h-4 w-4 sm:h-5 sm:w-5" />}
             </Button>
@@ -333,7 +333,7 @@ export function AudioPlayerView({
               variant="ghost"
               size="sm"
               className="text-xs hover:bg-white/5 transition-colors h-7 px-2"
-              onClick={onToggleMinimize}
+              onClick={onToggleMinimizeAction}
             >
               <Headphones className="h-3 w-3 mr-1" />
               <span className="sr-only md:not-sr-only">Expand</span>
@@ -346,7 +346,7 @@ export function AudioPlayerView({
                 variant="ghost"
                 size="icon"
                 className="rounded-full hover:bg-white/5 transition-colors h-8 w-8 sm:h-10 sm:w-10 touch-target"
-                onClick={onPrevious}
+                onClick={onPreviousAction}
               >
                 <SkipBack className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
@@ -354,7 +354,7 @@ export function AudioPlayerView({
                 variant="ghost"
                 size="icon"
                 className="rounded-full h-10 w-10 sm:h-12 sm:w-12 bg-secondary text-black hover:bg-secondary/90 transition-colors hover-scale touch-target"
-                onClick={onTogglePlay}
+                onClick={onTogglePlayAction}
               >
                 {isPlaying ? (
                   <Pause className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -366,7 +366,7 @@ export function AudioPlayerView({
                 variant="ghost"
                 size="icon"
                 className="rounded-full hover:bg-white/5 transition-colors h-8 w-8 sm:h-10 sm:w-10 touch-target"
-                onClick={onNext}
+                onClick={onNextAction}
               >
                 <SkipForward className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
@@ -380,7 +380,7 @@ export function AudioPlayerView({
                   max={duration}
                   step={1}
                   className="flex-1"
-                  onValueChange={(value) => onSeek(value[0])}
+                  onValueChange={(value) => onSeekAction(value[0])}
                 />
                 {!isMobile && (
                   <div className="flex h-6 items-center gap-[2px]">
@@ -410,7 +410,7 @@ export function AudioPlayerView({
                   variant="ghost"
                   size="icon"
                   className="rounded-full h-8 w-8 hover:bg-white/5 transition-colors"
-                  onClick={onToggleMute}
+                  onClick={onToggleMuteAction}
                 >
                   {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                 </Button>
@@ -419,7 +419,7 @@ export function AudioPlayerView({
                   max={100}
                   step={1}
                   className="flex-1"
-                  onValueChange={(value) => onVolumeChange(value[0])}
+                  onValueChange={(value) => onVolumeChangeAction(value[0])}
                 />
               </div>
             )}
@@ -428,7 +428,7 @@ export function AudioPlayerView({
               variant="ghost"
               size="sm"
               className="text-xs hover:bg-white/5 transition-colors h-7 px-2"
-              onClick={onToggleMinimize}
+              onClick={onToggleMinimizeAction}
             >
               {isMobile ? "Min" : "Minimize"}
             </Button>
