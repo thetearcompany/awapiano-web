@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react"
 import { useAudioPlayerStore } from "@/stores/audio-player-store"
 import { AudioPlayerView } from "./components/audio-player-view"
-import { trpc } from "@/lib/trpc/client"
+import { client } from "@/lib/api"
 
 export function AudioPlayerContainer() {
   const {
@@ -104,7 +104,7 @@ export function AudioPlayerContainer() {
   }
 
   // Fetch now playing data from API
-  const { data: nowPlaying } = trpc.audio.getNowPlaying.useQuery(undefined, {
+  const { data: nowPlaying } = client.audio.getNowPlaying.useQuery(undefined, {
     refetchInterval: 60000, // Refetch every minute
   })
 

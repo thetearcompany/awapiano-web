@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react"
 import { useCommunityStore } from "@/stores/community-store"
 import { useUserStore } from "@/stores/user-store"
-import { trpc } from "@/lib/trpc/client"
+import { client } from "@/lib/api"
 import { CommunityFeed } from "./components/community-feed"
 import { CreatePostForm } from "./components/create-post-form"
 import { UserProfileCard } from "./components/user-profile-card"
 import { PopularGroupsList } from "./components/popular-groups-list"
 import { TrendingTopicsList } from "./components/trending-topics-list"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useMobileDetect } from "@/hooks/use-mobile"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
 
@@ -18,7 +18,7 @@ export function CommunityContainer() {
   const [activeTab, setActiveTab] = useState<"trending" | "latest" | "following">("trending")
   const [activeSidebarTab, setActiveSidebarTab] = useState<"profile" | "groups" | "topics">("profile")
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const isMobile = useMobileDetect()
+  const isMobile = useIsMobile()
 
   const {
     posts,
@@ -45,7 +45,7 @@ export function CommunityContainer() {
     fetchNextPage: fetchNextPosts,
     hasNextPage: hasNextPostsPage,
     refetch: refetchPosts,
-  } = trpc.community.getPosts.useInfiniteQuery(
+  } = client.community.getPosts.useInfiniteQuery(
     {
       type: activeTab,
       limit: 10,
@@ -57,19 +57,19 @@ export function CommunityContainer() {
   )
 
   // Fetch popular groups
-  const { data: groupsData, refetch: refetchGroups } = trpc.community.getPopularGroups.useQuery(
+  const { data: groupsData, refetch: refetchGroups } = client.community.getPopularGroups.useQuery(
     { limit: 5 },
     { enabled: true },
   )
 
   // Fetch trending topics
-  const { data: topicsData, refetch: refetchTopics } = trpc.community.getTrendingTopics.useQuery(
+  const { data: topicsData, refetch: refetchTopics } = client.community.getTrendingTopics.useQuery(
     { limit: 5 },
     { enabled: true },
   )
 
   // Create post mutation
-  const createPostMutation = trpc.community.createPost.useMutation({
+  const createPostMutation = client.community.createPost.useMutation({
     onSuccess: (data) => {
       if (data.success && data.post) {
         // Add the new post to the store
@@ -97,7 +97,7 @@ export function CommunityContainer() {
   })
 
   // Like post mutation
-  const likePostMutation = trpc.community.likePost.useMutation({
+  const likePostMutation = client.community.likePost.useMutation({
     onSuccess: (data, variables) => {
       if (data.success) {
         // Update the post in the store
@@ -112,7 +112,7 @@ export function CommunityContainer() {
   })
 
   // Unlike post mutation
-  const unlikePostMutation = trpc.community.unlikePost.useMutation({
+  const unlikePostMutation = client.community.unlikePost.useMutation({
     onSuccess: (data, variables) => {
       if (data.success) {
         // Update the post in the store
@@ -127,7 +127,7 @@ export function CommunityContainer() {
   })
 
   // Create comment mutation
-  const createCommentMutation = trpc.community.createComment.useMutation({
+  const createCommentMutation = client.community.createComment.useMutation({
     onSuccess: (data, variables) => {
       if (data.success && data.comment) {
         // In a real app, we would update the post with the new comment
@@ -145,7 +145,12 @@ export function CommunityContainer() {
   // Update store when data is fetched
   useEffect(() => {
     if (postsData?.pages[0]) {
-      const allPosts = postsData.pages.flatMap((page) => page.posts)
+      const allPosts = postsData.pages.flatMap((page) =>
+        page.posts.map(post => ({
+          ...post,
+          mediaType: post.mediaType as "link" | "image" | "audio" | undefined
+        }))
+      )
       setPosts(allPosts)
     }
   }, [postsData, setPosts])
@@ -281,7 +286,7 @@ export function CommunityContainer() {
 
         {/* Main Content */}
         <div className="md:col-span-2 space-y-6">
-          <CreatePostForm onSubmit={handleCreatePost} isLoading={createPostMutation.isLoading} />
+          <CreatePostForm onSubmit={handleCreatePost} isLoading={createPostMutation.isPending} />
 
           {error && (
             <div className="bg-accent/10 text-accent p-3 rounded-lg text-sm flex items-center justify-between animate-fade-in">
